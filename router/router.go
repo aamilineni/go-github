@@ -16,7 +16,10 @@ func InitialiseRouter() *gin.Engine {
 	// logger and recovery (crash-free) middleware
 	router := gin.Default()
 
-	router.GET("/:name/repos", middleware.ValidateJSONHeader, handlers.NewGithubHandler(restclient.Client).Get)
+	// version 1
+	apiV1 := router.Group("/v1")
+
+	apiV1.GET("/:name/repos", middleware.ValidateJSONHeader, handlers.NewGithubHandler(restclient.Client).Get)
 
 	return router
 

@@ -43,6 +43,7 @@ func initialiseServer(r *gin.Engine) {
 		Handler: r,
 	}
 
+	log.Default().Println("Starting go-github app in the port :: 8080")
 	// Initializing the server in a goroutine so that
 	// it won't block the graceful shutdown handling below
 	go func() {
