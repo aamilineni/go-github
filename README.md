@@ -42,11 +42,32 @@ Get the token from Github->Settings->Personal Access Token->Generate new
 
 <img src="./static/github-authtoken.png"/>
 
+
+After adding the auth token to your `.env` file, it should look something like below
+
+```
+GITHUB_AUTH_TOKEN=<github-personal-access-token>
+```
+
 This project uses go modules and provides a make file. You should be able to simply install and start:
 
 ```
 $ make build_and_run
 ```
+
+To run all the test cases written
+
+```
+$ make test
+```
+
+
+To run test coverage
+
+```
+$ make test_coverage
+```
+
 
 This project also supports Docker, to run the app using docker 
 
