@@ -56,7 +56,7 @@ paths:
       description: Get the User Github Profile and Repo information using public Github
         APIs
       parameters:
-      - description: string valid
+      - description: Github Username
         in: path
         name: github_username
         required: true

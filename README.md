@@ -83,6 +83,14 @@ $ docker build -t go-blockchain .
 $ docker run --publish 8000:8000 go-blockchain
 ```
 
+This Project supports Swagger. To run the Swagger UI, simply run the project and open the swagger UI 
+
+```
+$ make swagger
+$ make build_and_run
+```
+And hit the `http://localhost:8080/swagger/index.html` URL in browser.
+
 ## 2. Design Pattern
 
 Since we are using the Gin web framework, we made the application rest api routes very easy.

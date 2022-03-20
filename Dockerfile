@@ -13,6 +13,11 @@ ADD . /app
 WORKDIR /app
 ## Add this go mod download command to pull in any dependencies
 RUN go mod download
+## RUN the following commands for Swagger
+RUN go install github.com/swaggo/swag/cmd/swag
+RUN go install github.com/swaggo/gin-swagger
+RUN go install github.com/swaggo/files
+RUN swag init -g main.go router/router.go --output docs
 ## we run go build to compile the binary
 ## executable of our Go program
 RUN go build -o go-github . 

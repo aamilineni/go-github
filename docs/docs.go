@@ -65,7 +65,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "string valid",
+                        "description": "Github Username",
                         "name": "github_username",
                         "in": "path",
                         "required": true
