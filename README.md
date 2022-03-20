@@ -22,13 +22,16 @@ To install go-github, you need to install [Go](https://golang.org/)(**version 1.
 Clone the project
 
 ```
-$ cd <path of the project>
+$ git clone https://github.com/aamilineni/go-github.git
+$ cd go-github
 $ cp .env.default .env
 ```
 
-Add the value to the `GITHUB_AUTH_TOKEN` key from the 
+Add the value to the `GITHUB_AUTH_TOKEN` key which can be obtatined from Github Personal Accesss Token
 
-To obtain the Github Auth Token which is required for the Github API authentication, otherwise we get the rate-limiting error fromt the Github API's as the requests/hour is less without github authentication
+Why Do we need GITHUB AUTH TOKEN ?
+
+ -> There is a Rate Limiting applied to the Github Public APIs. Hence we require Github Auth Token.
 
 Refer the below URLs for more information:
 <div>
