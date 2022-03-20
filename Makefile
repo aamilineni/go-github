@@ -1,0 +1,2 @@
+cover:
+	go test ./... -cover
