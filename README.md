@@ -27,7 +27,7 @@ $ cd go-github
 $ cp .env.default .env
 ```
 
-Add the value to the `GITHUB_AUTH_TOKEN` key which can be obtatined from Github Personal Accesss Token
+Add the value to the `GITHUB_AUTH_TOKEN` key in the .env file which can be obtatined from Github Personal Accesss Token
 
 Why Do we need GITHUB AUTH TOKEN ?
 
