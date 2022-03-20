@@ -53,7 +53,7 @@ func TestGetWithStatus200(t *testing.T) {
 	restclient.Client = &MockClient{}
 	NewGithubHandler(restclient.Client).Get(c)
 
-	fmt.Println(w.Code)
+	assert.Equal(t, c.Writer.Status(), http.StatusOK)
 }
 
 func TestGetWithStatus404(t *testing.T) {
@@ -74,6 +74,58 @@ func TestGetWithStatus404(t *testing.T) {
 	NewGithubHandler(restclient.Client).Get(c)
 
 	assert.Equal(t, c.Writer.Status(), http.StatusNotFound)
+}
+
+func TestGetWithStatus500(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+
+	GetDoFunc = func(req *http.Request) (*http.Response, error) {
+		mockResponse := httptest.NewRecorder()
+		var data interface{}
+
+		switch req.URL.String() {
+		case "https://mock/branchesURL":
+			mockResponse.WriteHeader(http.StatusInternalServerError)
+			return mockResponse.Result(), nil
+		default:
+			data = getGithubModel()
+			bytes, _ := json.Marshal(data)
+			mockResponse.Write(bytes)
+		}
+
+		return mockResponse.Result(), nil
+
+	}
+
+	w := httptest.NewRecorder()
+	c, _ := gin.CreateTestContext(w)
+
+	c.Params = []gin.Param{{Key: "name", Value: "Anil"}}
+
+	restclient.Client = &MockClient{}
+	NewGithubHandler(restclient.Client).Get(c)
+
+	assert.Equal(t, c.Writer.Status(), http.StatusInternalServerError)
+}
+
+func TestGetForRepoModelWithStatus500(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+
+	GetDoFunc = func(req *http.Request) (*http.Response, error) {
+		mockResponse := httptest.NewRecorder()
+		mockResponse.WriteHeader(http.StatusInternalServerError)
+		return mockResponse.Result(), nil
+	}
+
+	w := httptest.NewRecorder()
+	c, _ := gin.CreateTestContext(w)
+
+	c.Params = []gin.Param{{Key: "name", Value: "Anil"}}
+
+	restclient.Client = &MockClient{}
+	NewGithubHandler(restclient.Client).Get(c)
+
+	assert.Equal(t, c.Writer.Status(), http.StatusInternalServerError)
 }
 
 func getGithubModel() *[]model.GithubModel {

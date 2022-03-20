@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-	"sync"
 
 	"github.com/aamilineni/go-github/api/model"
 	"github.com/aamilineni/go-github/constants"
 	"github.com/aamilineni/go-github/restclient"
 	"github.com/gin-gonic/gin"
+	"golang.org/x/sync/errgroup"
 )
 
 type githubHandler struct {
@@ -40,39 +40,44 @@ func (me *githubHandler) Get(ctx *gin.Context) {
 		return
 	}
 
-	var wg sync.WaitGroup
+	var errGroup errgroup.Group
 
 	githubRepoResponses := []*model.GithubRepoResponse{}
 
 	for _, repo := range *githubModel {
-		wg.Add(1)
-		go func(repoModel model.GithubModel) {
-			defer wg.Done()
-			githubRepoModelArr := &[]model.GithubRepoModel{}
-			err := restclient.Get(repoModel.GetBranchesURL(), headers, githubRepoModelArr)
-			if err != nil {
-				handleError(err, ctx)
-				return
-			}
+		func(repoModel model.GithubModel) {
+			errGroup.Go(func() error {
+				githubRepoModelArr := &[]model.GithubRepoModel{}
+				err := restclient.Get(repoModel.GetBranchesURL(), headers, githubRepoModelArr)
+				if err != nil {
+					return err
+				}
 
-			githubRepoResponse := &model.GithubRepoResponse{
-				OwnerLogin: repoModel.Owner.Login,
-				RepoName:   repoModel.Name,
-				Branches:   []model.GithubRepoBranchResponse{},
-			}
+				githubRepoResponse := &model.GithubRepoResponse{
+					OwnerLogin: repoModel.Owner.Login,
+					RepoName:   repoModel.Name,
+					Branches:   []model.GithubRepoBranchResponse{},
+				}
 
-			for _, githubRepoModel := range *githubRepoModelArr {
-				githubRepoResponse.Branches = append(githubRepoResponse.Branches, model.GithubRepoBranchResponse{
-					LastCommitSHA: githubRepoModel.Commit.SHA,
-					BranchName:    githubRepoModel.Name,
-				})
-			}
-			githubRepoResponses = append(githubRepoResponses, githubRepoResponse)
+				for _, githubRepoModel := range *githubRepoModelArr {
+					githubRepoResponse.Branches = append(githubRepoResponse.Branches, model.GithubRepoBranchResponse{
+						LastCommitSHA: githubRepoModel.Commit.SHA,
+						BranchName:    githubRepoModel.Name,
+					})
+				}
+				githubRepoResponses = append(githubRepoResponses, githubRepoResponse)
+				return nil
+			})
 
 		}(repo)
 
 	}
-	wg.Wait()
+
+	if err := errGroup.Wait(); err != nil {
+		handleError(err, ctx)
+
+		return
+	}
 
 	ctx.JSON(http.StatusOK, &githubRepoResponses)
 }
