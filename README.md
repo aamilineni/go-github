@@ -55,6 +55,12 @@ This project uses go modules and provides a make file. You should be able to sim
 $ make build_and_run
 ```
 
+Once you run the app, to health check you can make the following cURL
+
+```
+curl --location --request GET 'http://localhost:8080/v1/healthcheck'
+```
+
 To run all the test cases written
 
 ```
@@ -67,6 +73,7 @@ To run test coverage
 ```
 $ make test_coverage
 ```
+
 
 
 This project also supports Docker, to run the app using docker 
@@ -99,7 +106,7 @@ Using the below frameworks in this project:
 
 
 ## 5. About App
-Go-Github service gets the Github Repos information and it is designed to be scalable in the future
+Go-Github service gets the Github Repos information from the PUBLIC API's given by github.com and it is designed to be scalable in the future
 
 Request API:
 http://localhost:8080/v1/{user_name}/repos
