@@ -88,6 +88,10 @@ Example cURL:
 curl --location --request GET 'http://localhost:8080/v1/aamilineni/repos' --header 'Accept: application/json'
 ```
 
+Unit test cases are covered for handlers & restclient. 
+
+<img src="./static/test-coverage.png" />
+
 ## 6. Performance Metrics
 Benchmarking for this application is not done.
 <p align="justify"><i>"As this application uses Gin web framework, the default logs of Gin server shows how much time is consumed by each request to send response back."</i></p>
