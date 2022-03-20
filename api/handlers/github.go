@@ -28,7 +28,7 @@ func (me *githubHandler) Get(ctx *gin.Context) {
 	name := ctx.Param(constants.QUERY_PARAM_NAME)
 
 	headers := http.Header{}
-	headers.Add("Authorization", fmt.Sprintf("Basic %s", os.Getenv(constants.GITHUB_AUTHTOKEN)))
+	headers.Add("Authorization", fmt.Sprintf("token %s", os.Getenv(constants.GITHUB_AUTHTOKEN)))
 
 	// Get the REPO'S information for the given user from github API
 	reposURL := fmt.Sprintf(constants.GET_REPOS_URL, name)

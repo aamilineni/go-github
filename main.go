@@ -10,13 +10,27 @@ import (
 
 	"github.com/aamilineni/go-github/router"
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 func main() {
 
+	// Initialise .env
+	initialiseEnv()
+
+	// Initialise gin with default settings & router
 	r := router.InitialiseRouter()
 
+	// Initialise server with graceful shutdown
 	initialiseServer(r)
+}
+
+func initialiseEnv() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
 }
 
 func initialiseServer(r *gin.Engine) {
