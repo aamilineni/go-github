@@ -35,7 +35,7 @@ func (me *githubHandler) Get(ctx *gin.Context) {
 	githubModel := &[]model.GithubModel{}
 	err := restclient.Get(reposURL, headers, githubModel)
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, err)
+		handleError(err, ctx)
 
 		return
 	}
@@ -51,8 +51,7 @@ func (me *githubHandler) Get(ctx *gin.Context) {
 			githubRepoModelArr := &[]model.GithubRepoModel{}
 			err := restclient.Get(repoModel.GetBranchesURL(), headers, githubRepoModelArr)
 			if err != nil {
-				ctx.JSON(http.StatusInternalServerError, err)
-
+				handleError(err, ctx)
 				return
 			}
 
@@ -76,4 +75,15 @@ func (me *githubHandler) Get(ctx *gin.Context) {
 	wg.Wait()
 
 	ctx.JSON(http.StatusOK, &githubRepoResponses)
+}
+
+func handleError(err error, ctx *gin.Context) {
+
+	switch v := err.(type) {
+	case model.ErrorModel:
+		ctx.JSON(v.Status, v)
+	default:
+		ctx.JSON(http.StatusInternalServerError, err)
+	}
+
 }

@@ -16,7 +16,10 @@ type GithubModel struct {
 }
 
 func (me GithubModel) GetBranchesURL() string {
-	return me.BranchesURL[:strings.Index(me.BranchesURL, "{")]
+	if strings.Contains(me.BranchesURL, "{") {
+		return me.BranchesURL[:strings.Index(me.BranchesURL, "{")]
+	}
+	return me.BranchesURL
 }
 
 type GithubRepoModel struct {
