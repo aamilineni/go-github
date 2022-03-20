@@ -79,8 +79,8 @@ $ make test_coverage
 This project also supports Docker, to run the app using docker 
 
 ```
-$ docker build -t go-blockchain .  
-$ docker run --publish 8000:8000 go-blockchain
+$ docker build -t go-github .  
+$ docker run --publish 8000:8000 go-github
 ```
 
 This Project supports Swagger. To run the Swagger UI, simply run the project and open the swagger UI 
