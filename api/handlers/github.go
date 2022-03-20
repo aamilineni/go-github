@@ -35,7 +35,7 @@ func (me *githubHandler) Get(ctx *gin.Context) {
 	githubModel := &[]model.GithubModel{}
 	err := restclient.Get(reposURL, headers, githubModel)
 	if err != nil {
-		ctx.Errors = append(ctx.Errors, ctx.Error(err))
+		ctx.JSON(http.StatusInternalServerError, err)
 
 		return
 	}
@@ -51,7 +51,7 @@ func (me *githubHandler) Get(ctx *gin.Context) {
 			githubRepoModelArr := &[]model.GithubRepoModel{}
 			err := restclient.Get(repoModel.GetBranchesURL(), headers, githubRepoModelArr)
 			if err != nil {
-				ctx.Errors = append(ctx.Errors, ctx.Error(err))
+				ctx.JSON(http.StatusInternalServerError, err)
 
 				return
 			}

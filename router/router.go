@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/aamilineni/go-github/api/handlers"
+	"github.com/aamilineni/go-github/api/middleware"
 	"github.com/aamilineni/go-github/restclient"
 )
 
@@ -15,7 +16,7 @@ func InitialiseRouter() *gin.Engine {
 	// logger and recovery (crash-free) middleware
 	router := gin.Default()
 
-	router.GET("/:name/repos", handlers.NewGithubHandler(restclient.Client).Get)
+	router.GET("/:name/repos", middleware.ValidateJSONHeader, handlers.NewGithubHandler(restclient.Client).Get)
 
 	return router
 
