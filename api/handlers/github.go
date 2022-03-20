@@ -22,6 +22,15 @@ func NewGithubHandler(client restclient.HTTPClient) *githubHandler {
 	}
 }
 
+// Get godoc
+// @Summary Get the User Github Profile and Repo information.
+// @Description Get the User Github Profile and Repo information using public Github APIs
+// @Tags root
+// @Accept application/json
+// @Produce json
+// @Success 200 {object} []model.GithubRepoResponse
+// @Param github_username path string true "Github Username"
+// @Router /api/v1/{github_username}/repos [get]
 func (me *githubHandler) Get(ctx *gin.Context) {
 
 	// get the repo name from query param
