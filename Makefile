@@ -3,7 +3,7 @@ test:
 
 test_coverage:
 	go test ./... -coverprofile=coverage.out
-	go tool cover -html=cover.out
+	go tool cover -html=coverage.out
 
 build_and_run:
 	go build -o go-github .
