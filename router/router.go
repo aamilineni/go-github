@@ -9,6 +9,8 @@ import (
 
 func InitialiseRouter() *gin.Engine {
 
+	gin.SetMode(gin.ReleaseMode)
+
 	// Creates a gin router with default middleware:
 	// logger and recovery (crash-free) middleware
 	router := gin.Default()
