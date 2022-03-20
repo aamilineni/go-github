@@ -4,8 +4,6 @@
 go-github is a simple web application helps in getting the github user & repo information. 
 It is written using <a href="https://github.com/gin-gonic/gin"><strong>Gin Web Framework</strong></a> to make server high performant
 
-https://docs.github.com/en/rest/guides/getting-started-with-the-rest-api
-
 
 ## Contents
 - [Go Github](#go-github)
