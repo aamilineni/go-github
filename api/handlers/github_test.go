@@ -15,10 +15,12 @@ import (
 
 // MockClient is the mock client
 type MockClient struct {
-	DoFunc func(req *http.Request) (*http.Response, error)
+	// DoFunc func(req *http.Request) (*http.Response, error)
 }
 
-var GetDoFunc func(req *http.Request) (*http.Response, error)
+var (
+	GetDoFunc func(req *http.Request) (*http.Response, error)
+)
 
 // Do is the mock client's `Do` func
 func (m *MockClient) Do(req *http.Request) (*http.Response, error) {
@@ -46,14 +48,14 @@ func TestGetWithStatus200(t *testing.T) {
 	}
 
 	w := httptest.NewRecorder()
-	c, _ := gin.CreateTestContext(w)
+	ctx, _ := gin.CreateTestContext(w)
 
-	c.Params = []gin.Param{{Key: "name", Value: "Anil"}}
+	ctx.Params = []gin.Param{{Key: "name", Value: "Anil"}}
 
 	restclient.Client = &MockClient{}
-	NewGithubHandler(restclient.Client).Get(c)
+	NewGithubHandler(restclient.Client).Get(ctx)
 
-	assert.Equal(t, c.Writer.Status(), http.StatusOK)
+	assert.Equal(t, ctx.Writer.Status(), http.StatusOK)
 }
 
 func TestGetWithStatus404(t *testing.T) {
@@ -66,14 +68,14 @@ func TestGetWithStatus404(t *testing.T) {
 	}
 
 	w := httptest.NewRecorder()
-	c, _ := gin.CreateTestContext(w)
+	ctx, _ := gin.CreateTestContext(w)
 
-	c.Params = []gin.Param{{Key: "name", Value: "Anil"}}
+	ctx.Params = []gin.Param{{Key: "name", Value: "Anil"}}
 
 	restclient.Client = &MockClient{}
-	NewGithubHandler(restclient.Client).Get(c)
+	NewGithubHandler(restclient.Client).Get(ctx)
 
-	assert.Equal(t, c.Writer.Status(), http.StatusNotFound)
+	assert.Equal(t, ctx.Writer.Status(), http.StatusNotFound)
 }
 
 func TestGetWithStatus500(t *testing.T) {
@@ -98,17 +100,18 @@ func TestGetWithStatus500(t *testing.T) {
 	}
 
 	w := httptest.NewRecorder()
-	c, _ := gin.CreateTestContext(w)
+	ctx, _ := gin.CreateTestContext(w)
 
-	c.Params = []gin.Param{{Key: "name", Value: "Anil"}}
+	ctx.Params = []gin.Param{{Key: "name", Value: "Anil"}}
 
 	restclient.Client = &MockClient{}
-	NewGithubHandler(restclient.Client).Get(c)
+	NewGithubHandler(restclient.Client).Get(ctx)
 
-	assert.Equal(t, c.Writer.Status(), http.StatusInternalServerError)
+	assert.Equal(t, ctx.Writer.Status(), http.StatusInternalServerError)
 }
 
 func TestGetForRepoModelWithStatus500(t *testing.T) {
+	t.Parallel()
 	gin.SetMode(gin.TestMode)
 
 	GetDoFunc = func(req *http.Request) (*http.Response, error) {
@@ -118,14 +121,14 @@ func TestGetForRepoModelWithStatus500(t *testing.T) {
 	}
 
 	w := httptest.NewRecorder()
-	c, _ := gin.CreateTestContext(w)
+	ctx, _ := gin.CreateTestContext(w)
 
-	c.Params = []gin.Param{{Key: "name", Value: "Anil"}}
+	ctx.Params = []gin.Param{{Key: "name", Value: "Anil"}}
 
 	restclient.Client = &MockClient{}
-	NewGithubHandler(restclient.Client).Get(c)
+	NewGithubHandler(restclient.Client).Get(ctx)
 
-	assert.Equal(t, c.Writer.Status(), http.StatusInternalServerError)
+	assert.Equal(t, ctx.Writer.Status(), http.StatusInternalServerError)
 }
 
 func getGithubModel() *[]model.GithubModel {
@@ -153,13 +156,13 @@ func getGithubModel() *[]model.GithubModel {
 func getGithubRepoModel() *[]model.GithubRepoModel {
 	githubRepoModelArr := []model.GithubRepoModel{}
 
-	for i := 0; i < 2; i++ {
+	for index := 0; index < 2; index++ {
 		githubRepoModelArr = append(githubRepoModelArr, model.GithubRepoModel{
-			Name: fmt.Sprintf("%d", i),
+			Name: fmt.Sprintf("%d", index),
 			Commit: struct {
 				SHA string "json:\"sha\""
 			}{
-				SHA: fmt.Sprintf("SHA%d", i),
+				SHA: fmt.Sprintf("SHA%d", index),
 			},
 		})
 	}

@@ -32,7 +32,10 @@ func (me *githubHandler) Get(ctx *gin.Context) {
 
 	// Get the REPO'S information for the given user from github API
 	reposURL := fmt.Sprintf(constants.GET_REPOS_URL, name)
+
 	githubModel := &[]model.GithubModel{}
+
+	// Get the githubmodel of the user and also to fetch the repos information.
 	err := restclient.Get(reposURL, headers, githubModel)
 	if err != nil {
 		handleError(err, ctx)
@@ -44,10 +47,15 @@ func (me *githubHandler) Get(ctx *gin.Context) {
 
 	githubRepoResponses := []*model.GithubRepoResponse{}
 
+	// loop through the githubModel array for the http response
 	for _, repo := range *githubModel {
+
+		// iterating through each repos, to get the branch and last commit SHA information
 		func(repoModel model.GithubModel) {
 			errGroup.Go(func() error {
 				githubRepoModelArr := &[]model.GithubRepoModel{}
+
+				// http Get for the branch information like branch name and last commit SHA
 				err := restclient.Get(repoModel.GetBranchesURL(), headers, githubRepoModelArr)
 				if err != nil {
 					return err
@@ -66,6 +74,7 @@ func (me *githubHandler) Get(ctx *gin.Context) {
 					})
 				}
 				githubRepoResponses = append(githubRepoResponses, githubRepoResponse)
+
 				return nil
 			})
 
@@ -73,6 +82,7 @@ func (me *githubHandler) Get(ctx *gin.Context) {
 
 	}
 
+	// errGroup will wait for any error to be returned if there is any error occured in the go-routine
 	if err := errGroup.Wait(); err != nil {
 		handleError(err, ctx)
 
@@ -82,8 +92,8 @@ func (me *githubHandler) Get(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, &githubRepoResponses)
 }
 
+// Handle Error
 func handleError(err error, ctx *gin.Context) {
-
 	switch v := err.(type) {
 	case model.ErrorModel:
 		ctx.JSON(v.Status, v)
