@@ -21,12 +21,30 @@ https://docs.github.com/en/rest/guides/getting-started-with-the-rest-api
 
 To install go-github, you need to install [Go](https://golang.org/)(**version 1.12+ is required**) and set your Go workspace.
 
-This project uses go modules and provides a make file. You should be able to simply install and start:
-
 Clone the project
 
 ```
 $ cd <path of the project>
+$ cp .env.default .env
+```
+
+Add the value to the `GITHUB_AUTH_TOKEN` key from the 
+
+To obtain the Github Auth Token which is required for the Github API authentication, otherwise we get the rate-limiting error fromt the Github API's as the requests/hour is less without github authentication
+
+Refer the below URLs for more information:
+<div>
+https://docs.github.com/en/rest/guides/getting-started-with-the-rest-api
+</div>
+
+
+Get the token from Github->Settings->Personal Access Token->Generate new
+
+<img src="./static/github-authtoken.png"/>
+
+This project uses go modules and provides a make file. You should be able to simply install and start:
+
+```
 $ make build_and_run
 ```
 
